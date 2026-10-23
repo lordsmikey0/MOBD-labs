@@ -1,59 +1,54 @@
 -- Лабораторная работа №2 — базовые SQL-запросы и фильтрация.
--- Запускать после seed.sql; запросы не изменяют данные.
+-- СПИСОК ЗАПРОСОВ
 
--- 1. DISTINCT: уникальные сочетания категории и активности товара,
---    с псевдонимами столбцов.
-SELECT DISTINCT category_id AS category, is_active AS available
-FROM public.products
-ORDER BY category, available;
 
--- 2. Фильтрация AND / OR со скобками.
---    Активные товары: либо недорогие смартфоны, либо дорогие ноутбуки.
-SELECT id, title, price, category_id
+-- Задание 2
+SELECT DISTINCT title AS product_name, price AS product_price
 FROM public.products
-WHERE is_active = TRUE
-  AND ((title ILIKE 'Смартфон%' AND price < 20000)
-       OR (title ILIKE 'Ноутбук%' AND price >= 20000))
-ORDER BY price DESC
-LIMIT 15;
+ORDER BY product_price, product_name
+LIMIT 10;
 
--- 3. BETWEEN: товары в диапазоне цен включительно.
-SELECT id, title, price
-FROM public.products
-WHERE price BETWEEN 1000 AND 5000
-ORDER BY price, id
-LIMIT 15;
 
--- 4. IN: товары выбранных категорий.
-SELECT id, title, category_id, price
+-- Задание 3
+SELECT title AS product_name, price AS product_price
 FROM public.products
-WHERE category_id IN (5, 6, 7)
-ORDER BY category_id, id
-LIMIT 15;
-
--- 5. ILIKE: нечувствительный к регистру поиск подстроки.
-SELECT id, title, price
-FROM public.products
-WHERE title ILIKE '%смартфон%'
-ORDER BY id
-LIMIT 15;
-
--- 6. IS NULL: товары без описания.
-SELECT id, title, description
-FROM public.products
-WHERE description IS NULL
-ORDER BY id
-LIMIT 15;
-
--- 7. Сортировка по двум столбцам в разных направлениях.
-SELECT id, category_id, title, price
-FROM public.products
-ORDER BY category_id ASC, price DESC, id ASC
+WHERE is_active = TRUE AND ((price < 2000) OR (price > 50000))
 LIMIT 20;
 
--- 8. Постраничный вывод: вторая страница из 20 товаров.
---    ORDER BY id гарантирует стабильный порядок для пагинации.
-SELECT id, title, price
+-- Задание 4.1
+SELECT title AS product_name, price AS product_price
 FROM public.products
-ORDER BY id ASC
-LIMIT 20 OFFSET 20;
+WHERE price BETWEEN 5000 AND 15000
+LIMIT 15;
+
+-- Задание 4.2
+SELECT title AS product_name, price AS product_price, category_id AS product_category
+FROM public.products
+WHERE category_id IN (5, 6, 7)
+LIMIT 10;
+
+-- Задание 4.3
+SELECT title AS product_name, price AS product_price
+FROM public.products
+WHERE title ILIKE '%лампа%'
+LIMIT 10;
+
+-- Задание 4.4
+SELECT title AS product_title, price AS product_price
+FROM public.products
+WHERE description IS NULL
+LIMIT 10;
+
+-- Задание 5
+SELECT id, user_id, status, total_amount, created_at
+FROM public.orders
+ORDER BY status ASC, total_amount DESC
+LIMIT 15;
+
+-- Задание 6
+SELECT id, title AS product_title, price AS product_price, description AS product_desc
+FROM public.products
+WHERE description IS NOT NULL
+ORDER BY title ASC, price ASC, id ASC
+LIMIT 10
+OFFSET 10;
