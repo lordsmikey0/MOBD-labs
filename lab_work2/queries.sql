@@ -2,6 +2,18 @@
 -- СПИСОК ЗАПРОСОВ
 
 
+-- Получение количества сгенерированных записей в таблицах
+SELECT 'users' AS table_name, COUNT(*) AS row_count FROM public.users
+UNION ALL
+SELECT 'products', COUNT(*) FROM public.products
+UNION ALL
+SELECT 'orders', COUNT(*) FROM public.orders
+UNION ALL
+SELECT 'order_items', COUNT(*) FROM public.order_items
+UNION ALL
+SELECT 'deliveries', COUNT(*) FROM public.deliveries;
+
+
 -- Задание 2
 SELECT DISTINCT title AS product_name, price AS product_price
 FROM public.products
